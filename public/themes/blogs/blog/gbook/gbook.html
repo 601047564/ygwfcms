@@ -1,0 +1,509 @@
+<include file="head" xmlns="http://www.w3.org/1999/html"/>
+<include file="header" />
+
+<link href="/themes/blogs/public/liuyan/css/base1.css" rel="stylesheet">
+
+<article>
+  <div class="container">
+    <h2 class="ctitle"><b>留言板</b> <span>你，生命中最重要的过客，之所以是过客，因为你未曾为我停留。</span></h2>
+    <div class="gbook">
+      <div class="about">
+        <div id="fountainG">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </div>
+        <div class="about_girl"><span><a href="/"><img src="/themes/blogs/public/images/liuyan.jpg"></a></span>
+          <p>当您驻足停留过，从此便注定我们的缘分。站在时间的尽头，我们已是朋友，前端的路上我再也不用一个人独自行走。</p>
+        </div>
+        <!--留言-->
+        <script src="/themes/blogs/public/liuyan/js/modernizr.js"></script>
+        <div class="ibody">
+          <div class="article">
+            <div class="pinglun ">
+              <div class="collapse">
+                <div class="well">
+                  <if condition="($Request.session.mobile)">
+                    <div style="display: inline-block; width: auto;height: 42px" node-type="header-login" class="header-login login-success">
+                      <img style="width: 42px; height: 42px; border-radius: 42px; float: left" src="/upload/blog/{$data['avatar']}">
+                      <span id="mobileid" style="font-size: 16px; margin-left: 10px; margin-right: 10px">{$data['mobile']}：{$data['user_nickname']}</span>
+                    </div>
+                    <!--修改用户信息-->
+                    <div class="overlay-outer information" style=" display: none;top: 50%; margin-top: -237px; left: 50%; margin-left: -192px; opacity: 1; position: fixed; z-index: 9999999999;">
+                      <div node-type="changyan-login-dialog-wrapper" class="clear-g changyan-login-dialog-wrapper changyan-login-dialog-wrapper-main">
+                      <div class="clear-g">
+                        <div node-type="close-dialog" class="login-close-btn"></div>
+                      </div>
+                      <div style="padding-top: 15px" node-type="platform-login" class="platform-login">
+                        <center><img src="/upload/blog/{$data['avatar']}" style="margin-bottom: -15px; margin-left: 30px; width: 60px; height: 60px; background-size: 60px; border-radius: 50%; cursor: pointer"></center>
+                        <div node-type="phone-login" class="phone-login" style="display: block;">
+                          <div class="phone-login-title">我的信息</div>
+                          <form enctype="multipart/form-data" action="{:Url('blog/gbook/information')}" method="post">
+                              <!--图片上传-->
+                              <div class="uploader blue">
+                                  <input type="text" class="filename" readonly="readonly" value="点击上传头像"/>
+                                  <input type="button" name="upfile" class="button" value="Browse..."/>
+                                  <input type="file" name="upfile" size="30"/>
+                              </div>
+                              <span style="margin-left: 20px; color: #777">允许上传的文件类型为:jpg,png,gif,jpeg,最大不超过2M</span>
+                              <!--图片上传-->
+                            <input type="hidden" value="{$data['id']}" name="id">
+                            <div class="phone-input-outer" style="margin-top: 30px">
+                              <input class="phone-input" name="user_nickname" type="text" value="{$data['user_nickname']}" placeholder="昵称">
+                            </div>
+                            <div class="error-txt-outer">
+                              <span node-type="phone-num-prompt" class="error-txt">填写的手机号不正确</span>
+                              <span node-type="password-prompt" class="error-txt">密码错误</span>
+                            </div>
+                            <input type="submit" class="login-btn" value="保存信息">
+                            <a href="{:Url('blog/gbook/out')}" style="margin-top: 42px" class="login-btn">退出登录</a>
+                          </form>
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  <else />
+                    <div node-type="header-login" class="header-login login">登录</div>
+                  </if>
+                  <form action="{:Url('blog/Gbook/addComment')}" method="post" role="form" >
+                    <if condition="($Request.session.mobile)">
+                      <input type="hidden" name="avatar" value="{$data['avatar']}">
+                      <div style="display: none" class="input-group">
+                        <span class="input-group">昵称</span>
+                        <input type="text" class="name1 input-group" placeholder="昵称" name="author" value="{$data['user_nickname']}">
+                        <input type="hidden" class=" input-group" placeholder="" name="pid" value="0">
+                      </div>
+                      <else />
+                      <input type="hidden" name="avatar" value="liuyan.jpg">
+                      <div style="display: none" class="input-group">
+                        <span class="input-group">昵称</span>
+                        <input type="text" id="ipv4-1" name="author" class="name1 input-group" placeholder="昵称" value="来自【{$ip['ip']}】的游客">
+                        <input type="hidden" class=" input-group" placeholder="" name="pid" value="0">
+                      </div>
+                    </if>
+                    <div class="input-group">
+                      <textarea class="comment" id="content-text" name="content" rows="3" placeholder="请输入评论内容"></textarea>
+                    </div>
+                    <div class="input-group">
+                      <span class="emotion input-group face"></span>
+                    </div>
+                    <div class="input-group submit">
+                      <button type="submit" class="submit-btn">确认发布</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="pid" value=""/>
+            <div >
+              <volist name="commentList" id="vo">
+                <eq name="vo.pid" value="0"><hr class="solidline"/><else/><hr class="dottedline"/></eq>
+                <div class="commentList "  style="padding-left:{$vo['level']-1}cm">
+                  <div>
+                    <span class="user">
+                      <volist name="liuyandata" id="voo">
+                      <if condition="($voo['id']==$vo['id'])">
+                        <img style="width: 42px; height: 42px; border-radius: 42px; float: left;margin-top: 1px" src="/upload/blog/{$voo['avatar']}">
+                      <else />
+                      </if>
+                      </volist>
+                      <if condition="($vo.pauthor eq NULL)">{$vo.author}
+                          <else /> {$vo.author}<span class="black" style="color: #000101">回复</span>{$vo.pauthor}
+                      </if>
+                    </span>
+                    <span  class="hftime">{$vo.time|date="Y-m-d H:m:i",###}</span>
+                  </div>
+                  <div class="content">{$vo.content|reFace}
+                    <div style="display: inline;float: right">
+                      <span node-type="report" class="click-report-gw">
+                        <a href="javascript:;" class="report" data-id="{$vo.id}" id="report{$vo.id}">
+                          <i class="icon-gw icon-flag"></i>
+                          <em>举报</em>
+                        </a>
+                      </span>
+                      <i class="gap-gw"></i>
+                      <a class="hf" id="{$vo.id}">回复</a>
+                      <i class="gap-gw"></i>
+                      <span node-type="support" class="click-ding-gw">
+                        <a href="javascript:;" class="support" data-id="{$vo.id}" id="support{$vo.id}">
+                          <i class="icon-gw icon-ding-bg"></i>
+                          <em class="icon-name-bg"></em>
+                          <span>{$vo['support']}</span>
+                        </a>
+                      </span>
+                      <i class="gap-gw"></i>
+                      <span node-type="oppose" class="click-cai-gw">
+                        <a href="javascript:;" class="opposition"  data-id="{$vo.id}" id="opposition{$vo.id}">
+                          <i class="icon-gw icon-cai-bg"></i>
+                          <em class="icon-name-bg"></em>
+                          <span>{$vo['opposition']}</span>
+                        </a>
+                    </span>
+                    </div>
+                  </div>
+                </div>
+              </volist>
+            </div>
+          </div>
+          <script type="text/javascript" src="/themes/blogs/public/liuyan/js/jquery-1.7.2.min.js"></script>
+          <script type="text/javascript" src="/themes/blogs/public/liuyan/js/jquery.qqFace.js" ></script>
+          <script type="text/javascript">
+              $(function() {
+                  $('.emotion').qqFace({
+                      id: 'facebox', //表情ID
+                      assign: 'content-text', //赋予到具体位置
+                      path: '/themes/blogs/public/liuyan/Face/'    //表情路径
+                  });
+                  $(".hf").click(//点击回复按钮事件
+                      function (e) {
+                          var $this = $(this);
+                          if ($this.parent().parent().next().hasClass('hftext')) {
+                              $(this).html('回复');
+                              $this.parent().parent().next().remove();
+                          } else {
+                              $(this).html('取消回复');
+                              $this.parent().parent().after('<div class="hftext"><form action="{:Url('blog/Gbook/addComment')}" method="post" role="form" ><input id="pid" type="hidden" name="pid" value="{$vo.id}"/> <if condition="($Request.session.mobile)"> <input type="hidden" name="avatar" value="{$data[\'avatar\']}"> <div style="display: none" class="input-group home-from-box"><span class="input-group">昵称</span><input type="hidden" class="input-group name1" placeholder="昵称" name="author" value="{$data[\'user_nickname\']}"></div> <else /> <input type="hidden" name="avatar" value="liuyan.jpg"> <div style="display: none" class="input-group home-from-box"><span class="input-group">昵称</span><input type="hidden" class="input-group name1" placeholder="昵称" name="author" value="来自【{$ip[\'ip\']}】的游客"></div> </if> <div class="input-group">  <textarea style="display: inline" class="input-group comment" id="content-text2" name="content" rows="3" placeholder="请输入评论内容"></textarea></div> <div class="input-group"> <span class="input-group emotion2 face"></span>  </div><div class="submit">  <input style=""  class="submit-btn" type="submit" value="发表"></div> </form></div>'
+                          );
+                              var v_id = $(e.target).attr('id');//获取元素id;
+                              $("#pid").val(v_id);
+                              $('.emotion2').qqFace({
+                                  id: 'facebox', //表情ID
+                                  assign: 'content-text2', //赋予到具体位置
+                                  path: '/themes/blogs/public/liuyan/Face/'   //表情路径
+                              });
+                          }
+
+                          $(".submit-btn").click(function () {
+                              var $this = $(this);
+                              var name = $this.parent().siblings().children('.name1').val();
+                              var content = $this.parent().siblings().children('.comment').val();
+                          });
+                      });
+                  $(".submit-btn").click(function () {
+                      var $this = $(this);
+                      var name = $this.parent().siblings().children('.name1').val();
+                      var content = $this.parent().siblings().children('.comment').val();
+                  });
+              });
+          </script>
+          <div class="clear"></div>
+          <!-- 清除浮动 -->
+        </div>
+        <!--留言-->
+        <!--登录注册-->
+        <!--模态框-->
+        <div class="changyan-overlay changyan-overlay-fixed"></div>
+        <!--登录-->
+        <div class="changyan-overlay-outer" style="top: 50%; margin-top: -237px; left: 50%; margin-left: -192px; opacity: 1;"><div node-type="changyan-login-dialog-wrapper" class="clear-g changyan-login-dialog-wrapper changyan-login-dialog-wrapper-main">
+          <div class="clear-g">
+            <div node-type="close-dialog" class="login-close-btn"></div>
+          </div>
+          <div node-type="platform-login" class="platform-login">
+            <div node-type="isv-logo" class="cy-logo" style="background: url();"></div>
+            <div node-type="phone-login" class="phone-login" style="display: block;">
+              <div class="phone-login-title">手机登录</div>
+              <form action="{:Url('blog/Gbook/login')}" method="post">
+                <div class="phone-input-outer">
+                  <input node-type="phone-num" id="mobile" name="mobile" class="phone-input" type="text" value="" placeholder="手机号">
+                </div>
+                <div class="phone-input-outer">
+                  <input node-type="phone-num" name="user_pass" class="phone-input" type="password" value="" placeholder="密码">
+                </div>
+                <div class="error-txt-outer">
+                  <span node-type="phone-num-prompt" class="error-txt">填写的手机号不正确</span>
+                  <span node-type="password-prompt" class="error-txt">密码错误</span>
+                </div>
+                <input type="submit" class="login-btn" value="登陆">
+              </form>
+              <span class="zhuce">注册</span>
+            </div>
+            <div node-type="wechat-login" class="wechat-login" style="display:none;">
+              <div class="wechat-login-part">
+                <span class="wechat-login-part-title">微信登录</span>
+                <div class="wechat-code-outer">
+                  <img node-type="wechat-code" class="wechat-code" src="http://changyan.itc.cn/mdevp/extensions/login-dialog/013/image/default_code.jpg">
+                  <span node-type="cy-logo-s" class="cy-logo-s"></span>
+                </div>
+                <span class="wechat-login-part-txt">首次登录需关注畅言公众号</span>
+              </div>
+            </div>
+            <div node-type="default-login" class="default-login" style="display: none;">
+            </div>
+            <ul class="login-group" node-type="dialog-third-login-list">
+              <li label="wechat" class="login-item">
+                <span data-platform-id="13" class="login-logo login-logo-wechat" title="微信登录"></span>
+              </li>
+              <li label="weibo" class="login-item">
+                <span data-platform-id="2" class="login-logo login-logo-weibo" title="微博登录"></span>
+              </li>
+              <li label="qq" class="login-item">
+                <span data-platform-id="3" class="login-logo login-logo-qq" title="QQ登录"></span>
+              </li>
+              <li label="phone" class="login-item">
+                <span data-platform-id="15" class="login-logo login-logo-phone" title="手机登录"></span>
+              </li>
+            </ul>
+            <div class="login-instruction">登录过的用户请沿用之前的登录方式</div>
+          </div>
+        </div></div>
+        <!--注册-->
+        <div class="overlay-outer" style="top: 50%; margin-top: -237px; left: 50%; margin-left: -192px; opacity: 1; position: fixed; z-index: 9999999999; display: none"><div node-type="changyan-login-dialog-wrapper" class="clear-g changyan-login-dialog-wrapper changyan-login-dialog-wrapper-main">
+          <div class="clear-g">
+            <div node-type="close-dialog" class="login-close-btn"></div>
+          </div>
+          <div node-type="platform-login" class="platform-login">
+            <div node-type="isv-logo" class="cy-logo" style="background: url();"></div>
+            <div node-type="phone-login" class="phone-login" style="display: block;">
+              <div class="phone-login-title">注册账号</div>
+              <div class="phone-login-txt">短信获取6位验证码</div>
+              <form action="{:Url('blog/Gbook/register')}" method="post">
+                <!--<input type="hidden" name="__token__" value="{$Request.token}" />-->
+                <div class="phone-input-outer">
+                  <input node-type="phone-num" id="phone" name="mobile" class="phone-input" type="text" value="" placeholder="手机号">
+                </div>
+                <div id="msg" class="error-txt-outer" style="display: none;">
+                  <span style="display: block;" node-type="phone-num-prompt" class="error-txt"></span>
+                </div>
+                <div class="phone-input-outer">
+                  <input node-type="phone-num" name="user_pass" class="phone-input" type="password" value="" placeholder="密码">
+                </div>
+                <div class="phone-input-outer">
+                  <input node-type="phone-num" name="user_pass_confirm" class="phone-input" type="password" value="" placeholder="请在此输入密码密码">
+                </div>
+                <div class="clear-g">
+                  <div style="margin-bottom: 15px" class="password-input-outer">
+                    <input node-type="password" id="code" name="code" class="password-input" type="password" value="" placeholder="验证码">
+                  </div>
+                  <button id="yanzhengma" class="password-btn">获取验证码</button>
+                </div>
+                  <input type="submit" style="margin-top: 42px" class="login-btn" value="注册">
+              </form>
+            </div>
+            <div node-type="default-login" class="default-login" style="display: none;">
+            </div>
+            <div class="login-instruction">登录过的用户请沿用之前的登录方式</div>
+          </div>
+        </div>
+        </div>
+        <!--登录注册-->
+        <!--举报内容-->
+        <div class="jubao1" style="z-index: 19891015;top: 50%;margin-top: -45px;left: 50%;margin-left: -116px; background-color: rgba(0,0,0,.6); color: #fff;border: none; position: fixed; text-align: center; display: none">
+          <div style="padding: 12px 25px">
+            <input style="width: 20px" type="checkbox" name="checkbox" value="啊">啊
+            <input style="width: 20px" type="checkbox" name="checkbox" value="飞">飞</br>
+            <input style="width: 20px" type="checkbox" name="checkbox" value="反">反
+            <input style="width: 20px" type="checkbox" name="checkbox" value="规">规</br>
+            <input id="hideid" type="hidden" value="">
+            <input id="other" type="text" placeholder="其他...">
+          </div>
+          <div>
+            <a id="jubao" class="layer" style="height: 28px;line-height: 28px;margin: 5px 5px 0;padding: 0 15px;border-radius: 2px;font-weight: 400;cursor: pointer;text-decoration: none;border-color: #1E9FFF;background-color: #1E9FFF;color: #fff;">举报</a>
+            <a id="quxiao" class="layer" style="height: 28px;line-height: 28px;margin: 5px 5px 0;padding: 0 15px;border-radius: 2px;font-weight: 400;cursor: pointer;text-decoration: none;border-color: #1E9FFF;background-color: #1E9FFF;color: #fff;">取消</a>
+          </div>
+        </div>
+        <!--举报内容-->
+        <script>
+            $(function() {
+                // 登录
+                $(".login").click(function () {
+                    $(".changyan-overlay").show();
+                    $(".changyan-overlay-outer").show();
+                })
+                $(".login-close-btn").click(function () {
+                    $(".changyan-overlay").hide();
+                    $(".changyan-overlay-outer").hide();
+                })
+                // 注册
+                $(".zhuce").click(function () {
+                    $(".changyan-overlay").show();
+                    $(".overlay-outer").show();
+                    $(".changyan-overlay-outer").hide();
+                })
+                $(".overlay-outer .login-close-btn").click(function () {
+                    $(".overlay-outer").hide();
+                    $(".changyan-overlay").hide();
+                })
+
+                // 验证码倒计时
+                var validCode=true;
+                $("#yanzhengma").click (function  () {
+                    var phone=$("#phone").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "{:Url('blog/gbook/duanxin')}",
+                        data: {
+                            'phone':phone,
+                        },
+                        success: function(msg){
+                            var msg = eval('('+msg+')');
+                            alert(msg.errmsg);
+                        }
+                    });
+
+                    var time=60;
+                    var $code=$(this);
+                    if (validCode) {
+                        validCode=false;
+                        var t=setInterval(function  () {
+                            time--;
+                            $code.html(time+"秒后重新获取");
+                            if (time==0) {
+                                clearInterval(t);
+                                $code.html("重新获取");
+                                validCode=true;
+                                $("#yanzhengma").attr("disabled", false);
+                            }else {
+                                $("#yanzhengma").attr("disabled", true);
+                            }
+                        },1000)}
+                })
+                // 保存信息
+                $('.login-success').click(function () {
+                    $('.information').show();
+                });
+                // 表单验证
+                $('#phone').blur(function () {
+                    var phone=$("#phone").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "{:Url('blog/gbook/isregister')}",
+                        data: {
+                            'phone':phone,
+                        },
+                        success: function(data){
+                            var data = eval('('+data+')');
+                            if (data.code==0){
+                                $('#msg').show();
+                                $('#msg span').html(data.msg).css('color','red');
+                            }else{
+                                $('#msg').hide();
+                            }
+                        }
+                    });
+                });
+                // 支持
+                $('.support').click(function () {
+                    var id=$(this).attr('data-id');
+                    var support=$(this).children('span').html();
+                    support++;
+                    $(this).children('span').text(support);
+                    $.ajax({
+                        type: "POST",
+                        url: "{:Url('blog/gbook/support')}",
+                        data: {
+                            'id':id,
+                           // 'support':support,
+                        },
+                        success: function(msg){
+                            var msg = eval('('+msg+')');
+                            //location.reload();
+                            alert(msg.msg);
+                            if (msg.code==0){
+                                $("#support"+id).css('color','#ff4e00');
+                                $("#support"+id+" .icon-ding-bg").css('background','url("/themes/blogs/public/liuyan/images/ding-active.png")');
+                            }
+                        }
+                    });
+                });
+                //反对
+                $('.opposition').click(function () {
+                    var id=$(this).attr('data-id');
+                    var opposition=$(this).children('span').html();
+                    opposition++;
+                    $(this).children('span').text(opposition);
+                    $.ajax({
+                        type: "POST",
+                        url: "{:Url('blog/gbook/opposition')}",
+                        data: {
+                            'id':id,
+                            //'opposition':opposition,
+                        },
+                        success: function(msg){
+                            var msg = eval('('+msg+')');
+                            alert(msg.msg);
+                            if (msg.code==0){
+                                $("#opposition"+id).css('color','#ff4e00');
+                                $("#opposition"+id+" .icon-cai-bg").css('background','url("/themes/blogs/public/liuyan/images/cai-active.png")');
+                            }
+                        }
+                    });
+                })
+                //举报
+                $(".report").click(function () {
+                    var id=$(this).attr('data-id');
+                    $('#hideid').val(id);
+                    $(".jubao1").show();
+                });
+                $("#quxiao").click(function () {
+                    $(".jubao1").hide();
+                });
+                $("#jubao").click(function () {
+                    var id=$("#hideid").val();
+                    var other=$("#other").val();
+                    var standard = $('input[name="checkbox"]:checked');
+                    var content='';
+                    var username=$("#mobileid").html();
+                    if (username==null){
+                        alert('请登录后在举报，感谢您的合作！');
+                        location.reload();
+                    }else {
+                        standard.each(function () {
+                            content+=$(this).val()+' ';
+                        })
+                        $.ajax({
+                            type: "POST",
+                            url: "{:Url('blog/gbook/report')}",
+                            data: {
+                                'id':id,
+                                'content':content,
+                                'other':other,
+                                'username':username,
+                            },
+                            success: function(msg){
+                                var msg = eval('('+msg+')');
+                                location.reload();
+                                console.log(msg.msg);
+                                alert(msg.msg);
+                                if (msg.code==0){
+                                    $("#report"+id).css('display','none');
+                                }
+                            }
+                        });
+                    }
+                });
+                //上传文件
+                $("input[type='file']").change(function(){
+                    //$(".file-name").empty();
+                    var file=$(this).val();
+                    var strFileName=file.replace(/^.+?\\([^\\]+?)(\.[^\.\\]*?)?$/gi,"$1");  //正则表达式获取文件名，不带后缀
+                    var FileExt=file.replace(/.+\./,"");   //正则表达式获取后缀
+                    var filename=strFileName+'.'+FileExt;
+                    // var arr=str.split('\\');
+                    // var text=arr[arr.length-1];
+                    $(".filename").val(filename);
+                });
+
+
+            });
+        </script>
+      </div>
+    </div>
+  </div>
+  </aside>
+</article>
+<include file="footer" />
+<script>
+    if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+        (function(){
+            window.scrollReveal = new scrollReveal({reset: true});
+        })();
+    };
+</script>
+</body>
+</html>

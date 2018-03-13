@@ -1,0 +1,33 @@
+<include file="head" />
+<include file="header" />
+<article>
+    <div class="container">
+        <div class="about left">
+            <ul>
+                <h4 class="atitle"><span>{$data['published_time|date="Y-m-d",###']}</span>{$data['post_title']}</h4>
+                <p class="newsnav">您现在的位置是:<a href="{:Url('blog/index/index')}">首页</a>&nbsp;>&nbsp;<a href="{:Url('blog/learn/learn')}">学无止境</a>&nbsp;>&nbsp;<a href="../div.html"></a></p>
+                <p><?php echo htmlspecialchars_decode($data['post_content']) ?></p>
+                <div class="keybq">
+                    <p><span>关键字词</span>：{$data['post_keywords']}</p>
+                </div>
+                <div class="nextinfo">
+                    <p>上一篇：<a href='../div.html'>返回列表</a></p>
+                    <p>下一篇：<a href='../2013-06-11/203.html'>心若向阳 无畏悲伤—个人网站模板</a></p>
+                </div>
+                <div class="otherlink">
+                    <h2 class="biaoti">相关文章</h2>
+                    <ul>
+                        <volist name="title" id="v">
+                        <li><a href="{:Url('blog/index/details',['id'=>$v['id']])}" title="{$v['post_title']}">{$v['post_title']}</a></li>
+                        </volist>
+                     </ul>
+                </div>
+            </ul>
+        </div>
+    </div>
+</article>
+<include file="footer" />
+<script>
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<include file="head" />
+<include file="header" />
+<article>
+	<div class="container">
+		<ul class="cbp_tmtimeline">
+			<volist name="data" id="v">
+				<?php if($v['post_type']==1){ ?>
+				<li>
+				<time class="cbp_tmtime"><span>{$v['published_time|date="m-d",###']}</span> <span>{$v['published_time|date="Y",###']}</span></time>
+				<div class="cbp_tmicon"></div>
+				<div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s" >
+					<h2>{$v['post_title']}</h2>
+					<p>
+						<span class="blogpic"><a href="/"><img src="/upload/<?php echo \Qiniu\json_decode($v['more'])->photos[0]->url ?>"></a></span>
+						<?php echo htmlspecialchars_decode($v['post_excerpt']) ?>
+					</p>
+					<p style="position: relative;bottom: -35px" >
+						<a href="/download/div/" title="{$v['name']}" target="_blank" class="classname">{$v['name']}</a>
+					</p>
+						<a href="{:Url('blog/index/details',['id'=>$v['id']])}" target="_blank" class="readmore">阅读全文&gt;&gt;</a>
+					</php>
+				</div>
+				</li>
+				<?php } ?>
+			</volist>
+		</ul>
+	</div>
+</article>
+<include file="footer" />
+<script>
+    if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+        (function(){
+            window.scrollReveal = new scrollReveal({reset: true});
+        })();
+    };
+</script>
+<php>$shu="";</php>
+<hook name="before_body_end"/>
+<hook name="footer_start" param="shu"/>
+</body>
+</html>
