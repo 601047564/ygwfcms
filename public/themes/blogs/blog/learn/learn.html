@@ -19,7 +19,7 @@
             <h2>{$v['post_title']}</h2>
             <p>
               <span class="blogpic"><a href="/"><img src="/upload/<?php echo \Qiniu\json_decode($v['more'])->photos[0]->url ?>"></a></span>
-              <?php echo htmlspecialchars_decode($v['post_content']) ?>
+              <?php echo htmlspecialchars_decode($v['post_excerpt']) ?>
             </p>
             <p style="position: relative;bottom: -35px" >
               <a href="/download/div/" title="{$v['name']}" target="_blank" class="classname">{$v['name']}</a>
